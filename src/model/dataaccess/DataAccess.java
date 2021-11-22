@@ -57,9 +57,16 @@ public class DataAccess {
 		
 	}
 	
+	public static void insertIntoDBValues(String dbName, String values) throws ClassNotFoundException, SQLException {
+		Connection connection = new ConnectionFactory().DBConnection();
+		
+		final PreparedStatement stmt = connection.prepareStatement("INSERT INTO " + dbName + " VALUES " + values);
+				
+		stmt.executeUpdate();
+	}
+	
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
 
-		
 		System.out.println(DataAccess.getInDBWhere("customer", "\"broncoID\"=145"));
 
 	}

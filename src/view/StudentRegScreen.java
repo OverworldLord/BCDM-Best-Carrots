@@ -4,18 +4,23 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class StudentRegScreen extends JFrame{
+import model.dataaccess.DataAccess;
+
+public class StudentRegScreen extends JFrame implements ActionListener{
 	
 	private JLabel firstName, lastName, DOB, phone, address, broncoID, enterDate, gradDate, major, minor, department, office, research;
 	
@@ -28,9 +33,11 @@ public class StudentRegScreen extends JFrame{
 	
 	private JPanel panelM, panelA, panel1, panel2;
 	
+	private int startingTab;
+	
 
-	public StudentRegScreen() {
-		
+	public StudentRegScreen(int startingTab) {
+		this.startingTab = startingTab;
 		this.initializeComponents();
 		this.buildUI();
 		
@@ -68,9 +75,13 @@ public class StudentRegScreen extends JFrame{
 	
 		
 		this.regSButton = new JButton("Register");
+		this.regSButton.addActionListener(this);
 		this.cancelSButton = new JButton("Cancel");
+		this.cancelSButton.addActionListener(this);
 		this.regPButton = new JButton("Register");
+		this.regPButton.addActionListener(this);
 		this.cancelPButton = new JButton("Cancel");
+		this.cancelPButton.addActionListener(this);
 		
 		this.panelM = new JPanel();
 		this.panelM.setLayout(new GridLayout(0, 1, 0, 0));
@@ -90,10 +101,6 @@ public class StudentRegScreen extends JFrame{
 		this.panel2.setSize(800, 800);
 		
 		this.tabs = new JTabbedPane();
-		
-		
-
-		
 		
 	}
 	
@@ -153,6 +160,7 @@ public class StudentRegScreen extends JFrame{
 		
 		tabs.addTab("Student Tab", panel1);
 		tabs.addTab("Professor Tab", panel2);
+		tabs.setSelectedIndex(this.startingTab);
 		
 		this.panelM.add(this.panelA);
 		this.panelM.add(this.tabs);
@@ -168,5 +176,54 @@ public class StudentRegScreen extends JFrame{
 		this.setResizable(false);
 		this.setVisible(true);
 
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent event) {
+		// TODO Auto-generated method stub
+		
+		if(event.getSource() == this.cancelSButton || event.getSource() == this.cancelPButton) {
+			
+			new MainScreen();
+			dispose();
+		} else if(event.getSource() == this.regSButton || event.getSource() == this.regPButton) {
+			String DBname;
+			DBname = "student";
+			String output;
+			output =  "('" + this.firstNameTF.getText() + ' ' + this.lastNameTF.getText() 	+ "', '";
+			output += 		this.DOBTF.getText() 										  	+ "', '";
+			output += 		this.phoneTF.getText() 											+ "', '";
+			output += 		this.addressTF.getText() 										+ "', '";
+			output += 		this.broncoIDTF.getText() 										+ "', '";
+			if(event.getSource() == this.regSButton)
+			{
+				output += 	this.enterDateTF.getText() 										+ "', '";
+				output += 	this.gradDateTF.getText()										+ "', '";
+				output += 	this.majorTF.getText() 											+ "', '";
+				output += 	this.minorTF.getText() 											+ "')";
+				
+				//Output to student DB
+				DBname = "student";
+				
+			} else if (event.getSource() == this.regPButton) {
+				output += 	this.departmentTF.getText() + "', '";
+				output += 	this.officeTF.getText() 	+ "', '";
+				output += 	this.researchTF.getText() 	+ "')";
+				
+				//Output to prof DB
+				DBname = "professor";
+			}
+			
+			try {
+				DataAccess.insertIntoDBValues(DBname, output);
+				
+				//print success message
+				JOptionPane.showMessageDialog(this,"Successfully added customer.");
+			}
+			catch(Exception e) {
+				//print fail message
+				JOptionPane.showMessageDialog(this,e,"Failed to add customer",JOptionPane.ERROR_MESSAGE);
+			}
+		}
 	}
 }
