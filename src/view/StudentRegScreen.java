@@ -170,7 +170,7 @@ public class StudentRegScreen extends JFrame implements ActionListener{
 //		this.getContentPane().add(panel2, BorderLayout.NORTH);
 		
 
-		this.setTitle("Student Registration");
+		this.setTitle("Customer Registration");
 		this.setBounds(350, 140, 800, 800);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);

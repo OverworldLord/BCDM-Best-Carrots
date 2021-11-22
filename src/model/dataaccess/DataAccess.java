@@ -40,7 +40,7 @@ public class DataAccess {
 		final PreparedStatement stmt = connection.prepareStatement("SELECT * FROM " + dbName);
 		
 		return DataAccess.rsQuery(stmt);
-
+		
 	}
 	
 	// Retrieve a row of data from a table in our database

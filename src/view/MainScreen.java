@@ -35,8 +35,10 @@ public class MainScreen extends JFrame implements ActionListener{
 		this.studentReg.addActionListener(this);
 		this.professorReg = new JButton("Professor Registration");
 		this.professorReg.addActionListener(this);
-		this.foodItemReg = new JButton("Dish/Breverage Registration");
+		this.foodItemReg = new JButton("Dish/Beverage Registration");
+		this.foodItemReg.addActionListener(this);
 		this.viewReport = new JButton("View Financial Report");
+		this.viewReport.addActionListener(this);
 		
 		this.orders = new JLabel("Orders Placeholder");
 		
@@ -102,6 +104,9 @@ public class MainScreen extends JFrame implements ActionListener{
 			dispose();
 		} else if(event.getSource() == this.professorReg) {
 			new StudentRegScreen(1);
+			dispose();
+		} else if(event.getSource() == this.foodItemReg) {
+			new DishBeverageScreen();
 			dispose();
 		}
 		
