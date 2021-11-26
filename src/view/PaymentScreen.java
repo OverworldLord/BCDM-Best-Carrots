@@ -20,6 +20,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 
 import model.dataaccess.DataAccess;
 
@@ -41,11 +42,14 @@ public class PaymentScreen extends JFrame implements ActionListener {
 	private JComboBox paymentMethod;
 	
 	private JTable orderTable, paymentSuccessTable;
-	private String[] tableColumns = {"Item", "Quantity", "Price", "Total Price"};
+	private DefaultTableModel model;
+//	private String[] tableColumns = {"Item", "Quantity", "Price", "Total Price"};
 
 	private int tableRows = 30;
 	
-	public PaymentScreen() {
+	public PaymentScreen(TableModel tableModel) {
+		
+		this.model = (DefaultTableModel) tableModel;
 		this.initializeComponents();
 		this.buildUI();
 	}
@@ -82,17 +86,8 @@ public class PaymentScreen extends JFrame implements ActionListener {
 		this.cardCCV = new JTextField();
 		
 		// Table
-		DefaultTableModel model = new DefaultTableModel(this.tableRows, this.tableColumns.length);
-		model.setColumnIdentifiers(this.tableColumns);
 		this.orderTable = new JTable(model);
-		TableColumn column = this.orderTable.getColumnModel().getColumn(0);
-		column.setPreferredWidth(180);
-		column = this.orderTable.getColumnModel().getColumn(1);
-		column.setPreferredWidth(180);
-		column = this.orderTable.getColumnModel().getColumn(2);
-		column.setPreferredWidth(180);
-		column = this.orderTable.getColumnModel().getColumn(3);
-		column.setPreferredWidth(180);
+
 		
 		//Payment Success , different model??
 		paymentMethodLabel = new JLabel("Payment Method:");
@@ -149,6 +144,7 @@ public class PaymentScreen extends JFrame implements ActionListener {
 		this.paymentPanel.add(topPaymentPanel);
 		this.paymentPanel.add(botPaymentPanel);
 		
+
 		this.successPaymentPanel.add(this.paymentMethodLabel);
 		this.successPaymentPanel.add(this.paymentInfoLabel);
 		this.successPaymentPanel.add(this.customerLabel);
@@ -192,13 +188,15 @@ public class PaymentScreen extends JFrame implements ActionListener {
 			new MainScreen();
 			dispose();
 		}
-		else if(event.getSource() == this.payButton) {
+		
+		if(event.getSource() == this.payButton) {
 			successPayment();
+//			dispose();
 		}
 	}
 	// hibernate functions
 	
-	public static void main(String args[]) {
-		new PaymentScreen();
-	}
+//	public static void main(String args[]) {
+//		new PaymentScreen();
+//	}
 }

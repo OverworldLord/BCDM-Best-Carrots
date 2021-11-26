@@ -5,6 +5,7 @@ public class FoodItem {
 	private String name;
 	private HistoricalPrice[] historicalPrice;
 	private int id;
+	private float currentPrice;
 	
 	public FoodItem(int id, String name, HistoricalPrice[] historicalPrice) {
 		this.id = id;
@@ -37,8 +38,13 @@ public class FoodItem {
 	}
 	
 	public float getCurrentPrice() {
-		float currentPrice = 0.0f;
 		return currentPrice;
+	}
+	
+	public void setCurrentPrice(float price) {
+		
+		this.currentPrice = price;
+		
 	}
 	
 }

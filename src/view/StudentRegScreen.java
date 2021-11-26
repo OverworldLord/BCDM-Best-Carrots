@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -187,6 +188,9 @@ public class StudentRegScreen extends JFrame implements ActionListener{
 			new MainScreen();
 			dispose();
 		} else if(event.getSource() == this.regSButton || event.getSource() == this.regPButton) {
+			
+			int discountType = 0;
+			
 			String DBname;
 			DBname = "student";
 			String output;
@@ -197,6 +201,8 @@ public class StudentRegScreen extends JFrame implements ActionListener{
 			output += 		this.broncoIDTF.getText() 										+ "', '";
 			if(event.getSource() == this.regSButton)
 			{
+				
+				discountType = 0;
 				output += 	this.enterDateTF.getText() 										+ "', '";
 				output += 	this.gradDateTF.getText()										+ "', '";
 				output += 	this.majorTF.getText() 											+ "', '";
@@ -206,6 +212,8 @@ public class StudentRegScreen extends JFrame implements ActionListener{
 				DBname = "student";
 				
 			} else if (event.getSource() == this.regPButton) {
+				
+				discountType = 1;
 				output += 	this.departmentTF.getText() + "', '";
 				output += 	this.officeTF.getText() 	+ "', '";
 				output += 	this.researchTF.getText() 	+ "')";
@@ -224,6 +232,21 @@ public class StudentRegScreen extends JFrame implements ActionListener{
 				//print fail message
 				JOptionPane.showMessageDialog(this,e,"Failed to add customer",JOptionPane.ERROR_MESSAGE);
 			}
+			
+			try {
+				
+				new DishBeverageScreen(discountType);
+				
+			} catch (ClassNotFoundException e) {
+				
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			dispose();
 		}
 	}
 }
