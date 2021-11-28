@@ -7,17 +7,11 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -27,7 +21,7 @@ import model.dataaccess.DataAccess;
 public class PaymentScreen extends JFrame implements ActionListener {
 	
 	private JPanel labelPanel, tablePanel, topPaymentPanel, botPaymentPanel, 
-				   paymentPanel, optionPanel, successPaymentPanel;
+				   paymentPanel, optionPanel, successPaymentPanel, mainPanel;
 	
 	private JButton payButton, cancelButton, printButton;
 	
@@ -39,6 +33,8 @@ public class PaymentScreen extends JFrame implements ActionListener {
 	private JLabel paymentMethodLabel, paymentInfoLabel, customerLabel, customerTypeLabel,
 		     	   transactionDateLabel, transactionTimeLabel;
 	
+	private JLabel paymentType, cardInfo, customerN, customerT, tDate, tTime;
+	
 	private JComboBox paymentMethod;
 	
 	private JTable orderTable, paymentSuccessTable;
@@ -46,10 +42,22 @@ public class PaymentScreen extends JFrame implements ActionListener {
 //	private String[] tableColumns = {"Item", "Quantity", "Price", "Total Price"};
 
 	private int tableRows = 30;
+
+	private String customerName, customerType;
 	
-	public PaymentScreen(TableModel tableModel) {
+	public PaymentScreen(TableModel tableModel, String customerName, int customerType) {
 		
 		this.model = (DefaultTableModel) tableModel;
+		
+		this.customerName = customerName;
+		
+		if(customerType == 0) {
+			this.customerType = "Professor";
+		}
+		else {
+			this.customerType = "Student";
+		}
+		
 		this.initializeComponents();
 		this.buildUI();
 	}
@@ -79,6 +87,8 @@ public class PaymentScreen extends JFrame implements ActionListener {
 		
 		// Drop down menus
 		this.paymentMethod = new JComboBox();
+		this.paymentMethod.addItem("Credit Card");
+		this.paymentMethod.addItem("Debit Card");
 		
 		// Text Fields
 		this.cardNumber = new JTextField();
@@ -90,12 +100,19 @@ public class PaymentScreen extends JFrame implements ActionListener {
 
 		
 		//Payment Success , different model??
-		paymentMethodLabel = new JLabel("Payment Method:");
-		paymentInfoLabel = new JLabel("Payment Info:");
-		customerLabel = new JLabel("Customer:");
-		customerTypeLabel = new JLabel("Customer Type:");
-		transactionDateLabel = new JLabel("Transaction Date:");
-		transactionTimeLabel = new JLabel("Transaction Time:");
+		this.paymentMethodLabel = new JLabel("Payment Method:");
+		this.paymentInfoLabel = new JLabel("Payment Info:");
+		this.customerLabel = new JLabel("Customer:");
+		this.customerTypeLabel = new JLabel("Customer Type:");
+		this.transactionDateLabel = new JLabel("Transaction Date:");
+		this.transactionTimeLabel = new JLabel("Transaction Time:");
+		
+		this.paymentType = new JLabel("");
+		this.cardInfo = new JLabel("");
+		this.customerN = new JLabel("");
+		this.customerT = new JLabel("");
+		this.tDate = new JLabel("");
+		this.tTime = new JLabel("");
 		
 		// Panels
 		this.labelPanel = new JPanel();
@@ -111,15 +128,17 @@ public class PaymentScreen extends JFrame implements ActionListener {
 		this.botPaymentPanel.setLayout((new GridLayout(0, 2, 10, 10)));
 		
 		this.successPaymentPanel = new JPanel();
-		this.successPaymentPanel.setLayout((new GridLayout(6, 0, 10, 2)));
+		this.successPaymentPanel.setLayout((new GridLayout(6, 1, 10, 2)));
 		
 		this.paymentPanel = new JPanel();
 		this.paymentPanel.setLayout((new GridLayout(0, 1, 0, 10)));
-		this.paymentPanel.setSize(200, 800);
+		this.paymentPanel.setSize(200, 400);
 		
 		this.optionPanel = new JPanel();
 		this.optionPanel.setLayout(new GridLayout(0, 4, 0, 0));
-		this.optionPanel.setSize(200, 200);
+		this.optionPanel.setSize(100, 200);
+		
+		
 	}
 	
 	private void buildUI() {
@@ -146,20 +165,27 @@ public class PaymentScreen extends JFrame implements ActionListener {
 		
 
 		this.successPaymentPanel.add(this.paymentMethodLabel);
+		this.successPaymentPanel.add(this.paymentType);
 		this.successPaymentPanel.add(this.paymentInfoLabel);
+		this.successPaymentPanel.add(this.cardInfo);
 		this.successPaymentPanel.add(this.customerLabel);
+		this.successPaymentPanel.add(this.customerN);
 		this.successPaymentPanel.add(this.customerTypeLabel);
+		this.successPaymentPanel.add(this.customerT);
 		this.successPaymentPanel.add(this.transactionDateLabel);
+		this.successPaymentPanel.add(this.tDate);
 		this.successPaymentPanel.add(this.transactionTimeLabel);
+		this.successPaymentPanel.add(this.tTime);
 		
 		this.optionPanel.add(Box.createRigidArea(new Dimension(20, 20)));
 		this.optionPanel.add(payButton);
 		this.optionPanel.add(cancelButton);
 		
 		//this.getContentPane().add(this.labelPanel, BorderLayout.NORTH);
-		this.getContentPane().add(this.tablePanel, BorderLayout.NORTH);
-		this.getContentPane().add(this.paymentPanel, BorderLayout.CENTER);
-		this.getContentPane().add(this.optionPanel, BorderLayout.SOUTH);
+		this.getContentPane().add(this.tablePanel);
+		this.getContentPane().add(this.paymentPanel);
+		this.getContentPane().add(this.optionPanel);
+		this.setLayout(new GridLayout(4, 1));
 		
 		this.setTitle("Payment");
 		this.setBounds(400, 120, 800, 800);
@@ -169,9 +195,21 @@ public class PaymentScreen extends JFrame implements ActionListener {
 		
 	}
 	
-	public void successPayment() {
+	public void successPayment(String payMethod, String payInfo, String custName, String custType,
+							   String tDate, String tTime) {
+		
+			this.setTitle("Payment Success");
+		
 			this.paymentPanel.remove(topPaymentPanel);
 			this.paymentPanel.remove(botPaymentPanel);
+			
+			this.paymentType.setText(payMethod);
+			this.cardInfo.setText(payInfo);
+			this.customerN.setText(custName);
+			this.customerT.setText(custType);
+			this.tDate.setText(tDate);
+			this.tTime.setText(tTime);
+			
 			this.paymentPanel.add(successPaymentPanel);
 			this.optionPanel.remove(payButton);
 			this.optionPanel.remove(cancelButton);
@@ -190,9 +228,91 @@ public class PaymentScreen extends JFrame implements ActionListener {
 		}
 		
 		if(event.getSource() == this.payButton) {
-			successPayment();
-//			dispose();
+			
+			SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
+			
+			Date date = new Date();
+			
+			int orderID = 0;
+			int broncoID = 0;
+			
+			int status = 1;
+			
+			String orderIDRequest = "SELECT MAX(\"OrderID\") FROM \"order\"";
+			
+			String broncoIDRequest = "";
+			
+
+			
+			ResultSet rs;
+			
+			if(this.customerType == "Professor") {
+				
+				broncoIDRequest = "SELECT \"broncoID\" FROM professor WHERE name='" + this.customerName + "'";
+			}
+			
+			else {
+				
+				broncoIDRequest = "SELECT \"broncoID\" FROM student WHERE name='" + this.customerName + "'";
+			}
+			
+			successPayment((String) this.paymentMethod.getSelectedItem(), this.cardNumber.getText(), this.customerName,
+					   this.customerType, dateFormatter.format(date), timeFormatter.format(date));
+			
+			try {
+				
+				rs = DataAccess.queryDB(orderIDRequest);
+				
+				if(rs.next()) {
+					
+					orderID = 1 + rs.getInt(1);
+					
+					System.out.println(orderID);
+					
+				}
+				
+				rs = DataAccess.queryDB(broncoIDRequest);
+				
+				if(rs.next()) {
+					
+					broncoID = rs.getInt(1);
+					System.out.println(broncoID);
+
+				}
+				
+
+			}
+			catch(Exception e) {
+				
+				orderID = 1;
+				
+				JOptionPane.showMessageDialog(this,e,"Payment failed. Try Again",JOptionPane.ERROR_MESSAGE);
+			}
+			
+			try {
+				
+				System.out.println("(" + orderID + ", " + broncoID + ", " + status + ", '"
+						  + dateFormatter.format(date) + "')");
+				
+				DataAccess.insertIntoDBValues("\"order\"", "(" + orderID + ", " + broncoID + ", " + status + ", '"
+						  + dateFormatter.format(date) + "')");
+				
+			}
+			
+			catch(Exception e) {
+				
+				JOptionPane.showMessageDialog(this,e,"Failed to add order",JOptionPane.ERROR_MESSAGE);
+			}
 		}
+		
+		if(event.getSource() == this.printButton) {
+			
+			
+			
+			
+		}
+		
 	}
 	// hibernate functions
 	

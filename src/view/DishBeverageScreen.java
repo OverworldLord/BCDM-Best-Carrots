@@ -53,11 +53,14 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 	private String[] tableColumns = {"Item", "Quantity", "Price", "Total Price"};
 	private int tableRows = 1;
 	
+	
+	private String customerName;
 	private int discountType;
 	
 	
-	public DishBeverageScreen(int discountType) throws ClassNotFoundException, SQLException {
+	public DishBeverageScreen(String customerName, int discountType) throws ClassNotFoundException, SQLException {
 		
+		this.customerName = customerName;
 		this.discountType = discountType;
 		this.initializeComponents();
 		this.buildUI();
@@ -196,8 +199,8 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 		
 		this.AddItemPanel.add(this.additemLabel);
 		this.AddItemPanel.add(this.CreateItemNameText);
-		this.AddItemPanel.add(Box.createRigidArea(new Dimension(20, 20)));
 		this.AddItemPanel.add(this.CreateItemPriceText);
+		this.AddItemPanel.add(Box.createRigidArea(new Dimension(20, 20)));
 		this.AddItemPanel.add(this.CreateItemButton);
 		
 		this.orderOptionsPanel.add(Box.createRigidArea(new Dimension(20, 20)));
@@ -251,21 +254,23 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 			
 			int itemID = 0;
 			
+			ResultSet rs;
+			
 			try {
 				
-				ResultSet rs = DataAccess.queryDB("SELECT (\"itemID\")  FROM fooditem WHERE name='" + itemName + "'");
+				rs = DataAccess.queryDB("SELECT (\"itemID\")  FROM fooditem WHERE name='" + itemName + "'");
 				
 				if(rs.next()) {
 					
 					itemID = rs.getInt(1);
 				}
 				
-				ResultSet price = DataAccess.queryDB("SELECT price FROM price WHERE \"itemID\"=" + itemID);
+				rs = DataAccess.queryDB("SELECT price FROM price WHERE \"itemID\"=" + itemID);
 				
-				if(price.next()) {
+				if(rs.next()) {
 					
-					itemPrice = price.getFloat(1) * quantity;
-					this.DishPriceText.setText(price.getString(1));
+					itemPrice = rs.getFloat(1) * quantity;
+					this.DishPriceText.setText(rs.getString(1));
 				}
 
 				
@@ -404,7 +409,7 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 		
 		if(event.getSource() == this.OrderButton) {
 
-			new PaymentScreen(this.OrderTable.getModel());
+			new PaymentScreen(this.OrderTable.getModel(), this.customerName, this.discountType);
 			dispose();
 		}
 		
@@ -413,8 +418,9 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 	
 	
 	public static void main(String args[]) throws ClassNotFoundException, SQLException {
+	
 		
-		new DishBeverageScreen(1);
+		new DishBeverageScreen("Michael", 1);
 	}
 
 }

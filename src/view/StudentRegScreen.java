@@ -235,7 +235,8 @@ public class StudentRegScreen extends JFrame implements ActionListener{
 			
 			try {
 				
-				new DishBeverageScreen(discountType);
+				new DishBeverageScreen((this.firstNameTF.getText() + " " + this.lastNameTF.getText()),
+										discountType);
 				
 			} catch (ClassNotFoundException e) {
 				
