@@ -35,17 +35,16 @@ import model.dataaccess.DataAccess;
 public class DishBeverageScreen extends JFrame implements ActionListener {
 	
 	
-	private JPanel TopPanel, DishPanel, BeveragePanel, AddItemPanel, orderOptionsPanel,  MainPanel, TablePanel, MenuPanel;
+	private JPanel TopPanel, DishPanel, AddItemPanel, orderOptionsPanel,  MainPanel, TablePanel, MenuPanel;
 	
-	private JLabel DishLabel, BeverageLabel, additemLabel;
+	private JLabel DishLabel, additemLabel;
 	private JLabel TypeLabel, NameLabel, QuantityLabel, PriceLabel;
 	
-	private JButton DishButton, BeverageButton, CreateItemButton, OrderButton, CancelButton, RemoveButton, FinalizeButton;
+	private JButton DishButton, CreateItemButton, OrderButton, CancelButton, RemoveButton, FinalizeButton;
 	
-	private JComboBox DishDropdown, BeverageDropdown;
+	private JComboBox DishDropdown;
 	
 	private JTextField 	DishQuantityText, DishPriceText,
-						BeverageQuantityText, BeveragePriceText,
 						CreateItemNameText, CreateItemPriceText;
 	
 	private JTable OrderTable;
@@ -70,7 +69,6 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 		
 		//Rows
 		this.DishLabel = new JLabel("Add Dish to order");
-		this.BeverageLabel = new JLabel("Add Beverage to order");
 		this.additemLabel = new JLabel("Add item to Database");
 		
 		//Columns
@@ -104,7 +102,7 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 		
 		//Dropdowns
 		this.DishDropdown 			= new JComboBox();
-		this.BeverageDropdown 		= new JComboBox();
+		this.DishDropdown.addActionListener(this);
 		
 		ResultSet rs = DataAccess.queryDB("SELECT name FROM fooditem");
 		
@@ -120,8 +118,6 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 		this.DishQuantityText.addActionListener(this);
 		this.DishPriceText 			= new JTextField();
 		this.DishPriceText.setEditable(false);
-//		this.BeverageQuantityText 	= new JTextField();
-//		this.BeveragePriceText 		= new JTextField();
 		this.CreateItemNameText 	= new JTextField();
 		this.CreateItemPriceText 	= new JTextField();
 		
@@ -149,9 +145,6 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 		
 		this.DishPanel = new JPanel();
 		this.DishPanel.setLayout((new GridLayout(0, 5, 10, 10)));
-		
-//		this.BeveragePanel = new JPanel();
-//		this.BeveragePanel.setLayout((new GridLayout(0, 5, 10, 10)));
 		
 		this.AddItemPanel = new JPanel();
 		this.AddItemPanel.setLayout((new GridLayout(0, 5, 10, 10)));
@@ -188,15 +181,7 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 		this.DishPanel.add(this.DishPriceText);
 		this.DishPanel.add(this.DishQuantityText);
 		this.DishPanel.add(this.DishButton);
-		
-//		this.BeveragePanel.add(this.BeverageLabel);
-//		this.BeveragePanel.add(this.BeverageDropdown);
-//		this.BeveragePanel.add(this.BeverageQuantityText);
-//		this.BeveragePanel.add(this.BeveragePriceText);
-//		this.BeveragePanel.add(this.BeverageButton);
-		
-		
-		
+
 		this.AddItemPanel.add(this.additemLabel);
 		this.AddItemPanel.add(this.CreateItemNameText);
 		this.AddItemPanel.add(this.CreateItemPriceText);
@@ -244,11 +229,9 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 			dispose();
 		}
 		
-		if(event.getSource() == this.DishQuantityText) {
+		if(event.getSource() == this.DishDropdown) {
 			
 			float itemPrice;
-			
-			float quantity = Float.valueOf(this.DishQuantityText.getText());
 			
 			String itemName = (String) this.DishDropdown.getSelectedItem();
 			
@@ -269,7 +252,6 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 				
 				if(rs.next()) {
 					
-					itemPrice = rs.getFloat(1) * quantity;
 					this.DishPriceText.setText(rs.getString(1));
 				}
 
@@ -278,8 +260,6 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 				
 				JOptionPane.showMessageDialog(this, e, "Database cannot find item.", JOptionPane.ERROR_MESSAGE);
 			}
-			
-			
 			
 		}
 		
@@ -298,10 +278,6 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 			
 		}
 		
-//		if(event.getSource() == this.BeverageButton) {
-//			
-//			
-//		}
 		
 		if(event.getSource() == this.CreateItemButton) {
 			
