@@ -227,27 +227,16 @@ public class StudentRegScreen extends JFrame implements ActionListener{
 				
 				//print success message
 				JOptionPane.showMessageDialog(this,"Successfully added customer.");
+				
+				new DishBeverageScreen((this.firstNameTF.getText() + " " + this.lastNameTF.getText()),
+						discountType);
+				dispose();
 			}
 			catch(Exception e) {
 				//print fail message
-				JOptionPane.showMessageDialog(this,e,"Failed to add customer",JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Failed to add customer");
 			}
 			
-			try {
-				
-				new DishBeverageScreen((this.firstNameTF.getText() + " " + this.lastNameTF.getText()),
-										discountType);
-				
-			} catch (ClassNotFoundException e) {
-				
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SQLException e) {
-				
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			dispose();
 		}
 	}
 }

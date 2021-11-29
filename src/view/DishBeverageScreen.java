@@ -317,10 +317,6 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 			priceOutput = "( " + itemID + ", '" + stringDate + "', '" +
 							this.CreateItemPriceText.getText() + "', " + itemID + ")";
 			
-			this.DishDropdown.removeAllItems();
-			
-			this.DishDropdown.addItem("Select Item");
-			
 			ResultSet rs;
 			
 			try {
@@ -329,6 +325,10 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 				DataAccess.insertIntoDBValues(DBname2, priceOutput);
 				
 				rs = DataAccess.queryDB("SELECT name FROM fooditem");
+				
+				this.DishDropdown.removeAllItems();
+				
+				this.DishDropdown.addItem("Select Item");
 				
 				while(rs.next()) {
 					
@@ -341,7 +341,7 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 			
 			catch (Exception e) {
 				
-				JOptionPane.showMessageDialog(this, e, "Item Registration failed.", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Item Registration failed.");
 			}
 			
 		

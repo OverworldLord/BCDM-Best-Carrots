@@ -49,7 +49,10 @@ public class FinancialReportScreen extends JFrame implements ActionListener {
 		this.toDateTF = new JTextField(10);
 		
 		this.viewReport =  new JButton("View Report");
+		this.viewReport.addActionListener(this);
+		
 		this.cancel = new JButton("Cancel");
+		this.cancel.addActionListener(this);
 		
 		this.customerPanel = new JPanel();
 		this.customerPanel.setLayout((new GridLayout(0, 4, 10, 10)));
@@ -99,13 +102,15 @@ public class FinancialReportScreen extends JFrame implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
+	public void actionPerformed(ActionEvent event) {
+		
+		if(event.getSource() == this.cancel) {
+			
+			new MainScreen();
+			dispose();
+		}
 		
 	}
 	
-	public static void main(String args[]) {
-	new FinancialReportScreen();
-}
 
 }

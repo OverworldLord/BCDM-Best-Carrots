@@ -37,8 +37,6 @@ public class MainScreen extends JFrame implements ActionListener{
 		this.studentReg.addActionListener(this);
 		this.professorReg = new JButton("Professor Registration");
 		this.professorReg.addActionListener(this);
-//		this.foodItemReg = new JButton("Dish/Beverage Registration");
-//		this.foodItemReg.addActionListener(this);
 		this.viewReport = new JButton("View Financial Report");
 		this.viewReport.addActionListener(this);
 		
@@ -104,23 +102,17 @@ public class MainScreen extends JFrame implements ActionListener{
 			
 			new StudentRegScreen(0);
 			dispose();
-		} else if(event.getSource() == this.professorReg) {
+		}
+		if(event.getSource() == this.professorReg) {
 			new StudentRegScreen(1);
 			dispose();
 		}
-//		} else if(event.getSource() == this.foodItemReg) {
-//			
-//			try {
-//				new DishBeverageScreen();
-//			} catch (ClassNotFoundException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (SQLException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			dispose();
-//		}
+		if(event.getSource() == this.viewReport) {
+			
+			new FinancialReportScreen();
+			dispose();
+		}
+		
 		
 	}
 	

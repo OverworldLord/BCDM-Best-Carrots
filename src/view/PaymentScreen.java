@@ -143,10 +143,6 @@ public class PaymentScreen extends JFrame implements ActionListener {
 	
 	private void buildUI() {
 		
-		//this.labelPanel.add(this.nameLabel);
-		//this.labelPanel.add(this.priceLabel);
-		//this.labelPanel.add(this.quantityLabel);
-		//this.labelPanel.add(new JLabel ("l"));
 		
 		this.tablePanel.add(this.orderTable);
 		
@@ -229,86 +225,96 @@ public class PaymentScreen extends JFrame implements ActionListener {
 		
 		if(event.getSource() == this.payButton) {
 			
-			SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-			SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
 			
-			Date date = new Date();
-			
-			int orderID = 0;
-			int broncoID = 0;
-			
-			int status = 1;
-			
-			String orderIDRequest = "SELECT MAX(\"OrderID\") FROM \"order\"";
-			
-			String broncoIDRequest = "";
-			
-
-			
-			ResultSet rs;
-			
-			if(this.customerType == "Professor") {
+			if(this.cardNumber.getText() == "" || this.cardCCV.getText() == "" || this.cardDate.getText() == "") {
 				
-				broncoIDRequest = "SELECT \"broncoID\" FROM professor WHERE name='" + this.customerName + "'";
+				JOptionPane.showMessageDialog(this,"Payment failed. Try again.");
+				
 			}
-			
 			else {
 				
-				broncoIDRequest = "SELECT \"broncoID\" FROM student WHERE name='" + this.customerName + "'";
-			}
-			
-			successPayment((String) this.paymentMethod.getSelectedItem(), this.cardNumber.getText(), this.customerName,
-					   this.customerType, dateFormatter.format(date), timeFormatter.format(date));
-			
-			try {
+				SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+				SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
 				
-				rs = DataAccess.queryDB(orderIDRequest);
+				Date date = new Date();
 				
-				if(rs.next()) {
+				int orderID = 0;
+				int broncoID = 0;
+				
+				int status = 1;
+				
+				String orderIDRequest = "SELECT MAX(\"OrderID\") FROM \"order\"";
+				
+				String broncoIDRequest = "";
+				
+
+				
+				ResultSet rs;
+				
+				if(this.customerType == "Professor") {
 					
-					orderID = 1 + rs.getInt(1);
+					broncoIDRequest = "SELECT \"broncoID\" FROM professor WHERE name='" + this.customerName + "'";
+				}
+				
+				else {
 					
-					System.out.println(orderID);
+					broncoIDRequest = "SELECT \"broncoID\" FROM student WHERE name='" + this.customerName + "'";
+				}
+				
+				successPayment((String) this.paymentMethod.getSelectedItem(), this.cardNumber.getText(), this.customerName,
+						   this.customerType, dateFormatter.format(date), timeFormatter.format(date));
+				
+				try {
+					
+					rs = DataAccess.queryDB(orderIDRequest);
+					
+					if(rs.next()) {
+						
+						orderID = 1 + rs.getInt(1);
+						
+						System.out.println(orderID);
+						
+					}
+					
+					rs = DataAccess.queryDB(broncoIDRequest);
+					
+					if(rs.next()) {
+						
+						broncoID = rs.getInt(1);
+						System.out.println(broncoID);
+
+					}
+					
+
+				}
+				catch(Exception e) {
+					
+					orderID = 1;
 					
 				}
 				
-				rs = DataAccess.queryDB(broncoIDRequest);
-				
-				if(rs.next()) {
+				try {
 					
-					broncoID = rs.getInt(1);
-					System.out.println(broncoID);
-
+					System.out.println("(" + orderID + ", " + broncoID + ", " + status + ", '"
+							  + dateFormatter.format(date) + "')");
+					
+					DataAccess.insertIntoDBValues("\"order\"", "(" + orderID + ", " + broncoID + ", " + status + ", '"
+							  + dateFormatter.format(date) + "')");
+					
 				}
 				
+				catch(Exception e) {
+					
+					JOptionPane.showMessageDialog(this,"Failed to add order");
+				}
+				
+			}
 
-			}
-			catch(Exception e) {
-				
-				orderID = 1;
-				
-				JOptionPane.showMessageDialog(this,e,"Payment failed. Try Again",JOptionPane.ERROR_MESSAGE);
-			}
-			
-			try {
-				
-				System.out.println("(" + orderID + ", " + broncoID + ", " + status + ", '"
-						  + dateFormatter.format(date) + "')");
-				
-				DataAccess.insertIntoDBValues("\"order\"", "(" + orderID + ", " + broncoID + ", " + status + ", '"
-						  + dateFormatter.format(date) + "')");
-				
-			}
-			
-			catch(Exception e) {
-				
-				JOptionPane.showMessageDialog(this,e,"Failed to add order",JOptionPane.ERROR_MESSAGE);
-			}
 		}
 		
 		if(event.getSource() == this.printButton) {
 			
-			
+			JOptionPane.showMessageDialog(this,"Print Receipt Success.");
 			
 			
 		}
