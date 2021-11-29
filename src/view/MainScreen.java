@@ -69,7 +69,7 @@ public class MainScreen extends JFrame implements ActionListener{
 		this.buttonBox.add(Box.createRigidArea(new Dimension(20, 20)));
 		this.buttonBox.add(this.professorReg);
 		this.buttonBox.add(Box.createRigidArea(new Dimension(20, 20)));
-		this.buttonBox.add(this.foodItemReg);
+//		this.buttonBox.add(this.foodItemReg);
 		this.buttonBox.add(Box.createRigidArea(new Dimension(20, 20)));
 		this.buttonBox.add(this.viewReport);
 		

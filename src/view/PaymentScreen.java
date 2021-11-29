@@ -51,7 +51,7 @@ public class PaymentScreen extends JFrame implements ActionListener {
 		
 		this.customerName = customerName;
 		
-		if(customerType == 0) {
+		if(customerType == 1) {
 			this.customerType = "Professor";
 		}
 		else {

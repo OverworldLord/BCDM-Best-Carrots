@@ -194,11 +194,11 @@ public class StudentRegScreen extends JFrame implements ActionListener{
 			String DBname;
 			DBname = "student";
 			String output;
-			output =  "('" + this.firstNameTF.getText() + ' ' + this.lastNameTF.getText() 	+ "', '";
+			output = "('" + this.broncoIDTF.getText() 										+ "', '";
+			output +=       this.firstNameTF.getText() + ' ' + this.lastNameTF.getText() 	+ "', '";
 			output += 		this.DOBTF.getText() 										  	+ "', '";
 			output += 		this.phoneTF.getText() 											+ "', '";
 			output += 		this.addressTF.getText() 										+ "', '";
-			output += 		this.broncoIDTF.getText() 										+ "', '";
 			if(event.getSource() == this.regSButton)
 			{
 				

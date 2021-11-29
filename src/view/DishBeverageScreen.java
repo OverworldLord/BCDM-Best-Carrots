@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -81,16 +82,13 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 		this.DishButton = new JButton("Add to order");
 		this.DishButton.addActionListener(this);
 		
-//		this.BeverageButton = new JButton("Add to order");
-//		this.BeverageButton.addActionListener(this);
-		
 		this.CreateItemButton = new JButton("Create item");
 		this.CreateItemButton.addActionListener(this);
 		
 		this.RemoveButton = new JButton("Remove");
 		this.RemoveButton.addActionListener(this);
 		
-		this.FinalizeButton = new JButton("Finalize Order");
+		this.FinalizeButton = new JButton("Finalize");
 		this.FinalizeButton.addActionListener(this);
 		
 		this.OrderButton = new JButton("Order");
@@ -102,7 +100,8 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 		
 		//Dropdowns
 		this.DishDropdown 			= new JComboBox();
-		this.DishDropdown.addActionListener(this);
+		
+		this.DishDropdown.addItem("(Select Item)");
 		
 		ResultSet rs = DataAccess.queryDB("SELECT name FROM fooditem");
 		
@@ -111,6 +110,8 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 			this.DishDropdown.addItem(rs.getString(1));
 		
 		}
+		
+		this.DishDropdown.addActionListener(this);
 		
 		
 		//Text Fields
@@ -199,7 +200,6 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 		
 		this.MainPanel.add(this.TopPanel);
 		this.MainPanel.add(this.DishPanel);
-//		this.MainPanel.add(this.BeveragePanel);
 		this.MainPanel.add(this.AddItemPanel);
 		
 		this.MenuPanel.add(Box.createRigidArea(new Dimension(20, 20)));
@@ -258,7 +258,7 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 				
 			} catch (Exception e) {
 				
-				JOptionPane.showMessageDialog(this, e, "Database cannot find item.", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, e, "Please select an dish/beverage", JOptionPane.ERROR_MESSAGE);
 			}
 			
 		}
@@ -268,7 +268,10 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 			String itemName = (String) this.DishDropdown.getSelectedItem();
 			int quantity = Integer.valueOf(this.DishQuantityText.getText());
 			Float price = Float.valueOf(this.DishPriceText.getText());
-			Float totalPrice = quantity * price;
+			
+			DecimalFormat df = new DecimalFormat("0.00");
+			
+			Float totalPrice = Float.valueOf(df.format(quantity * price));
 			
 			Object[] rowData = {itemName, quantity, price, totalPrice};
 			
@@ -314,10 +317,23 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 			priceOutput = "( " + itemID + ", '" + stringDate + "', '" +
 							this.CreateItemPriceText.getText() + "', " + itemID + ")";
 			
+			this.DishDropdown.removeAllItems();
+			
+			this.DishDropdown.addItem("Select Item");
+			
+			ResultSet rs;
+			
 			try {
 				
 				DataAccess.insertIntoDBValues(DBname1, itemOutput);
 				DataAccess.insertIntoDBValues(DBname2, priceOutput);
+				
+				rs = DataAccess.queryDB("SELECT name FROM fooditem");
+				
+				while(rs.next()) {
+					
+					this.DishDropdown.addItem(rs.getString(1));
+				}
 				
 				JOptionPane.showMessageDialog(this, "Successfully added item.");
 				
@@ -327,6 +343,10 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 				
 				JOptionPane.showMessageDialog(this, e, "Item Registration failed.", JOptionPane.ERROR_MESSAGE);
 			}
+			
+		
+			
+			
 			
 		}
 		
@@ -374,7 +394,9 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 			
 			model.addRow(rowData1);
 			
-			totalPrice = totalPrice - (totalPrice * priceDiscount);
+			DecimalFormat df = new DecimalFormat("0.00");
+			
+			totalPrice = Float.valueOf(df.format(totalPrice - (totalPrice * priceDiscount)));
 			
 			
 			Object[] rowData2 = {"Total", "", "", totalPrice};
@@ -393,10 +415,10 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 	
 	
 	
-	public static void main(String args[]) throws ClassNotFoundException, SQLException {
-	
-		
-		new DishBeverageScreen("Michael", 1);
-	}
+//	public static void main(String args[]) throws ClassNotFoundException, SQLException {
+//	
+//		
+//		new DishBeverageScreen("John Cena", 0);
+//	}
 
 }
