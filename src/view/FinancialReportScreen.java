@@ -38,22 +38,27 @@ public class FinancialReportScreen extends JFrame implements ActionListener {
 	
 	private void initializeComponents() {
 		
+		// Labels
 		this.customer = new JLabel("Customer: ");
 		this.period = new JLabel("Period: ");
 		this.fromDate = new JLabel("From: ");
 		this.toDate = new JLabel("To: ");
 		
+		// Dropdowns
 		this.customerDropDown = new JComboBox();
 		
+		// Textfields
 		this.fromDateTF = new JTextField(10);
 		this.toDateTF = new JTextField(10);
 		
+		// Buttons
 		this.viewReport =  new JButton("View Report");
 		this.viewReport.addActionListener(this);
 		
 		this.cancel = new JButton("Cancel");
 		this.cancel.addActionListener(this);
 		
+		// Panels
 		this.customerPanel = new JPanel();
 		this.customerPanel.setLayout((new GridLayout(0, 4, 10, 10)));
 		
@@ -86,7 +91,6 @@ public class FinancialReportScreen extends JFrame implements ActionListener {
 		this.buttonPanel.add(this.cancel);
 		
 		this.periodPanel.setPreferredSize(new Dimension(400, 800));
-//		this.buttonPanel.setSize(200, 200);
 		
 		this.getContentPane().add(this.customerPanel, BorderLayout.NORTH);
 		this.getContentPane().add(this.periodPanel, BorderLayout.CENTER);
@@ -104,6 +108,7 @@ public class FinancialReportScreen extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		
+		// This returns to the main menu
 		if(event.getSource() == this.cancel) {
 			
 			new MainScreen();

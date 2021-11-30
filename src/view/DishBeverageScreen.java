@@ -103,6 +103,7 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 		
 		this.DishDropdown.addItem("(Select Item)");
 		
+		// Grab list of food items from fooditem table
 		ResultSet rs = DataAccess.queryDB("SELECT name FROM fooditem");
 		
 		while(rs.next()) {
@@ -111,6 +112,7 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 		
 		}
 		
+		// Populate dropdown with items from database
 		this.DishDropdown.addActionListener(this);
 		
 		
@@ -135,6 +137,7 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 		column = this.OrderTable.getColumnModel().getColumn(3);
 		column.setPreferredWidth(180);
 		
+		// Name the first row of the table
 		model.setValueAt("Item", 0, 0);
 		model.setValueAt("Quantity", 0, 1);
 		model.setValueAt("Price", 0, 2);
@@ -169,7 +172,6 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 	}
 	
 	private void buildUI() {
-		
 		
 		this.TopPanel.add(this.TypeLabel);
 		this.TopPanel.add(this.NameLabel);
@@ -229,6 +231,8 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 			dispose();
 		}
 		
+		// This takes the current selected item in the dropdown,
+		// then update the price textfield to display price of that item
 		if(event.getSource() == this.DishDropdown) {
 			
 			float itemPrice;
@@ -258,11 +262,15 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 				
 			} catch (Exception e) {
 				
+				// Display error message
 				JOptionPane.showMessageDialog(this, e, "Please select an dish/beverage", JOptionPane.ERROR_MESSAGE);
 			}
 			
 		}
 		
+		// This is the "Add to Order" button. Once pressed, this will take what is
+		// currently selected in the dish dropdown, the text in the price textfield,
+		// and information typed in the quantity text field
 		if(event.getSource() == this.DishButton) {
 			
 			String itemName = (String) this.DishDropdown.getSelectedItem();
@@ -271,17 +279,20 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 			
 			DecimalFormat df = new DecimalFormat("0.00");
 			
+			// Calculate the price of item * quantity entered
 			Float totalPrice = Float.valueOf(df.format(quantity * price));
 			
+			// Put the item name, quantity, price, and its totalPrice in an array
 			Object[] rowData = {itemName, quantity, price, totalPrice};
 			
 			DefaultTableModel model = (DefaultTableModel) this.OrderTable.getModel();
 			
+			// Add array into a row of data for the table, then add that row to update the table
 			model.addRow(rowData);
 			
 		}
 		
-		
+		// This adds a food item to the database
 		if(event.getSource() == this.CreateItemButton) {
 			
 			String DBname1 = "fooditem";
@@ -296,6 +307,7 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 			
 			String stringDate = formatter.format(date);
 			
+			// Query the highest ID value and increment
 			try {
 				
 				ResultSet rs = DataAccess.queryDB("SELECT MAX(\"itemID\")  FROM fooditem");
@@ -319,6 +331,7 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 			
 			ResultSet rs;
 			
+			// Insert the new food items into the database
 			try {
 				
 				DataAccess.insertIntoDBValues(DBname1, itemOutput);
@@ -326,6 +339,7 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 				
 				rs = DataAccess.queryDB("SELECT name FROM fooditem");
 				
+				// Refresh the dish dropdown and repopulate it with the new dish item
 				this.DishDropdown.removeAllItems();
 				
 				this.DishDropdown.addItem("Select Item");
@@ -344,12 +358,10 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this, "Item Registration failed.");
 			}
 			
-		
-			
-			
-			
 		}
 		
+		// If a row in the table is selected, then the "Remove" button is pressed,
+		// that row will be removed from the table
 		if(event.getSource() == this.RemoveButton) {
 			
 			DefaultTableModel model = (DefaultTableModel) this.OrderTable.getModel();
@@ -361,6 +373,7 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 			
 		}
 		
+		// When "Finalize" button is pressed, the table will be updated
 		if(event.getSource() == this.FinalizeButton) {
 			
 			String dct;
@@ -369,6 +382,7 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 			
 			Float totalPrice = 0.00f;
 
+			// Discount for student
 			if(this.discountType == 0) {
 				
 				dct = "50%";
@@ -376,17 +390,20 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 				
 			}
 			
+			// Discount for professor
 			else {
 				
 				dct = "25%";
 				priceDiscount = 0.25f;
 			}
 			
+			// Add the discount row to table
 			Object[] rowData1 = {"Discount", dct};
 			
 			DefaultTableModel model = (DefaultTableModel) this.OrderTable.getModel();
-
 			
+			
+			// Calculate total price by adding up all the price in the 4th row
 			for(int i = 1; i < model.getRowCount(); i++) {
 				
 				totalPrice += (float) model.getValueAt(i, 3);
@@ -396,6 +413,7 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 			
 			DecimalFormat df = new DecimalFormat("0.00");
 			
+			// Add the final total price into the table
 			totalPrice = Float.valueOf(df.format(totalPrice - (totalPrice * priceDiscount)));
 			
 			
@@ -405,6 +423,8 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 			
 		}
 		
+		// This will take us to the payment screen with the order table, customer name, and discount type
+		// being passed
 		if(event.getSource() == this.OrderButton) {
 
 			new PaymentScreen(this.OrderTable.getModel(), this.customerName, this.discountType);
@@ -412,13 +432,5 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 		}
 		
 	}
-	
-	
-	
-//	public static void main(String args[]) throws ClassNotFoundException, SQLException {
-//	
-//		
-//		new DishBeverageScreen("John Cena", 0);
-//	}
 
 }

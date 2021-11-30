@@ -8,6 +8,8 @@ public class ConnectionFactory {
 	
 	public Connection DBConnection() throws ClassNotFoundException, SQLException {
 		
+		
+		// Get connection to database
 		final String URL = "jdbc:postgresql://localhost:5432/cpp_restaurant";
 
 		final String USER = "postgres";

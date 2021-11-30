@@ -46,6 +46,7 @@ public class StudentRegScreen extends JFrame implements ActionListener{
 	
 	private void initializeComponents() {
 		
+		// Labels
 		this.firstName = new JLabel("First name: ");
 		this.lastName = new JLabel("Last name: ");
 		this.DOB = new JLabel("DOB: ");
@@ -60,6 +61,7 @@ public class StudentRegScreen extends JFrame implements ActionListener{
 		this.office = new JLabel("Office: ");
 		this.research = new JLabel("Research: ");
 		
+		// Textfields
 		this.firstNameTF = new JTextField();
 		this.lastNameTF = new JTextField();
 		this.DOBTF = new JTextField();
@@ -74,7 +76,7 @@ public class StudentRegScreen extends JFrame implements ActionListener{
 		this.officeTF = new JTextField();
 		this.researchTF = new JTextField();
 	
-		
+		// Buttons
 		this.regSButton = new JButton("Register");
 		this.regSButton.addActionListener(this);
 		this.cancelSButton = new JButton("Cancel");
@@ -84,6 +86,7 @@ public class StudentRegScreen extends JFrame implements ActionListener{
 		this.cancelPButton = new JButton("Cancel");
 		this.cancelPButton.addActionListener(this);
 		
+		// Panels
 		this.panelM = new JPanel();
 		this.panelM.setLayout(new GridLayout(0, 1, 0, 0));
 		this.panelM.setSize(800, 800);
@@ -101,6 +104,7 @@ public class StudentRegScreen extends JFrame implements ActionListener{
 		this.panel2.setLayout((new GridLayout(0, 4, 10, 10)));
 		this.panel2.setSize(800, 800);
 		
+		// Tabs
 		this.tabs = new JTabbedPane();
 		
 	}
@@ -167,8 +171,6 @@ public class StudentRegScreen extends JFrame implements ActionListener{
 		this.panelM.add(this.tabs);
 		
 		this.getContentPane().add(panelM, BorderLayout.NORTH);
-//		this.getContentPane().add(panel1, BorderLayout.NORTH);
-//		this.getContentPane().add(panel2, BorderLayout.NORTH);
 		
 
 		this.setTitle("Customer Registration");
@@ -183,11 +185,14 @@ public class StudentRegScreen extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent event) {
 		// TODO Auto-generated method stub
 		
+		// If either cancel buttons are pressed, return to the main menu
 		if(event.getSource() == this.cancelSButton || event.getSource() == this.cancelPButton) {
-			
 			new MainScreen();
 			dispose();
-		} else if(event.getSource() == this.regSButton || event.getSource() == this.regPButton) {
+			
+		}
+		// If either registration button is pressed, add either student or professor to the database
+		else if(event.getSource() == this.regSButton || event.getSource() == this.regPButton) {
 			
 			int discountType = 0;
 			
@@ -199,6 +204,8 @@ public class StudentRegScreen extends JFrame implements ActionListener{
 			output += 		this.DOBTF.getText() 										  	+ "', '";
 			output += 		this.phoneTF.getText() 											+ "', '";
 			output += 		this.addressTF.getText() 										+ "', '";
+			
+			// Add student to student table
 			if(event.getSource() == this.regSButton)
 			{
 				
@@ -211,7 +218,9 @@ public class StudentRegScreen extends JFrame implements ActionListener{
 				//Output to student DB
 				DBname = "student";
 				
-			} else if (event.getSource() == this.regPButton) {
+			}
+			// Add professor to professor table
+			else if (event.getSource() == this.regPButton) {
 				
 				discountType = 1;
 				output += 	this.departmentTF.getText() + "', '";
@@ -222,17 +231,20 @@ public class StudentRegScreen extends JFrame implements ActionListener{
 				DBname = "professor";
 			}
 			
+			// Add the data into table
 			try {
 				DataAccess.insertIntoDBValues(DBname, output);
 				
 				//print success message
 				JOptionPane.showMessageDialog(this,"Successfully added customer.");
 				
+				// Change to dish registration screen
 				new DishBeverageScreen((this.firstNameTF.getText() + " " + this.lastNameTF.getText()),
 						discountType);
 				dispose();
 			}
 			catch(Exception e) {
+				
 				//print fail message
 				JOptionPane.showMessageDialog(this, "Failed to add customer");
 			}

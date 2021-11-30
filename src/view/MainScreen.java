@@ -33,6 +33,7 @@ public class MainScreen extends JFrame implements ActionListener{
 	
 	private void initializeComponents() {
 		
+		// Buttons
 		this.studentReg = new JButton("Student Registration");
 		this.studentReg.addActionListener(this);
 		this.professorReg = new JButton("Professor Registration");
@@ -40,10 +41,13 @@ public class MainScreen extends JFrame implements ActionListener{
 		this.viewReport = new JButton("View Financial Report");
 		this.viewReport.addActionListener(this);
 		
+		// Order Placeholder
 		this.orders = new JLabel("Orders Placeholder");
 		
+		// Box for panel placing
 		this.buttonBox = Box.createVerticalBox();
 		
+		// Panels
 		this.panel1 = new JPanel();
 		this.panel1.setLayout(new FlowLayout(FlowLayout.LEFT));
 		
@@ -55,11 +59,6 @@ public class MainScreen extends JFrame implements ActionListener{
 	private void buildUI() {
 		
 		
-//		this.panel1.add(this.studentReg);
-//		this.panel1.add(this.professorReg);
-//		this.panel1.add(this.foodItemReg);
-//		this.panel1.add(this.viewReport);
-		
 		this.panel2.setLocation(400, 0);
 		
 		this.buttonBox.add(Box.createRigidArea(new Dimension(20, 20)));
@@ -67,7 +66,6 @@ public class MainScreen extends JFrame implements ActionListener{
 		this.buttonBox.add(Box.createRigidArea(new Dimension(20, 20)));
 		this.buttonBox.add(this.professorReg);
 		this.buttonBox.add(Box.createRigidArea(new Dimension(20, 20)));
-//		this.buttonBox.add(this.foodItemReg);
 		this.buttonBox.add(Box.createRigidArea(new Dimension(20, 20)));
 		this.buttonBox.add(this.viewReport);
 		
@@ -98,15 +96,20 @@ public class MainScreen extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent event) {
 		// TODO Auto-generated method stub
 		
+		// Change to the customer registration screen starting at the student tab
 		if(event.getSource() == this.studentReg) {
 			
 			new StudentRegScreen(0);
 			dispose();
 		}
+		
+		// Change to the customer registration screen starting at the professor tab
 		if(event.getSource() == this.professorReg) {
 			new StudentRegScreen(1);
 			dispose();
 		}
+		
+		// Change to the view report screen
 		if(event.getSource() == this.viewReport) {
 			
 			new FinancialReportScreen();

@@ -39,7 +39,6 @@ public class PaymentScreen extends JFrame implements ActionListener {
 	
 	private JTable orderTable, paymentSuccessTable;
 	private DefaultTableModel model;
-//	private String[] tableColumns = {"Item", "Quantity", "Price", "Total Price"};
 
 	private int tableRows = 30;
 
@@ -177,7 +176,6 @@ public class PaymentScreen extends JFrame implements ActionListener {
 		this.optionPanel.add(payButton);
 		this.optionPanel.add(cancelButton);
 		
-		//this.getContentPane().add(this.labelPanel, BorderLayout.NORTH);
 		this.getContentPane().add(this.tablePanel);
 		this.getContentPane().add(this.paymentPanel);
 		this.getContentPane().add(this.optionPanel);
@@ -191,6 +189,7 @@ public class PaymentScreen extends JFrame implements ActionListener {
 		
 	}
 	
+	// Call this to change bottom panel to success payment panel
 	public void successPayment(String payMethod, String payInfo, String custName, String custType,
 							   String tDate, String tTime) {
 		
@@ -218,19 +217,22 @@ public class PaymentScreen extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		
+		// Return to the main screen
 		if(event.getSource() == this.cancelButton) {
 			new MainScreen();
 			dispose();
 		}
 		
+		// After pressing "Pay" button, add the order to database
 		if(event.getSource() == this.payButton) {
 			
-			
+			// If nothing is in the textfields, show pop up that payment failed
 			if(this.cardNumber.getText() == "" || this.cardCCV.getText() == "" || this.cardDate.getText() == "") {
 				
 				JOptionPane.showMessageDialog(this,"Payment failed. Try again.");
 				
 			}
+			
 			else {
 				
 				SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -247,10 +249,9 @@ public class PaymentScreen extends JFrame implements ActionListener {
 				
 				String broncoIDRequest = "";
 				
-
-				
 				ResultSet rs;
 				
+				// Grab the broncoID of either professor or student that matches the name that was passed from the previous screen
 				if(this.customerType == "Professor") {
 					
 					broncoIDRequest = "SELECT \"broncoID\" FROM professor WHERE name='" + this.customerName + "'";
@@ -261,9 +262,11 @@ public class PaymentScreen extends JFrame implements ActionListener {
 					broncoIDRequest = "SELECT \"broncoID\" FROM student WHERE name='" + this.customerName + "'";
 				}
 				
+				// Call success payment to change bottom panel. Pass all information to display data
 				successPayment((String) this.paymentMethod.getSelectedItem(), this.cardNumber.getText(), this.customerName,
 						   this.customerType, dateFormatter.format(date), timeFormatter.format(date));
 				
+				// Grab highest ID Value then increment
 				try {
 					
 					rs = DataAccess.queryDB(orderIDRequest);
@@ -285,7 +288,6 @@ public class PaymentScreen extends JFrame implements ActionListener {
 
 					}
 					
-
 				}
 				catch(Exception e) {
 					
@@ -293,6 +295,7 @@ public class PaymentScreen extends JFrame implements ActionListener {
 					
 				}
 				
+				// Insert the values into database.
 				try {
 					
 					System.out.println("(" + orderID + ", " + broncoID + ", " + status + ", '"
@@ -305,6 +308,7 @@ public class PaymentScreen extends JFrame implements ActionListener {
 				
 				catch(Exception e) {
 					
+					// Display error message
 					JOptionPane.showMessageDialog(this,"Failed to add order");
 				}
 				
@@ -312,17 +316,14 @@ public class PaymentScreen extends JFrame implements ActionListener {
 
 		}
 		
+		// Print Receipt button 
 		if(event.getSource() == this.printButton) {
 			
+			// Display print success message
 			JOptionPane.showMessageDialog(this,"Print Receipt Success.");
-			
-			
+				
 		}
 		
 	}
-	// hibernate functions
-	
-//	public static void main(String args[]) {
-//		new PaymentScreen();
-//	}
+
 }
