@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 
 public class MainScreen extends JFrame implements ActionListener{
 	
-	private JButton studentReg, professorReg, foodItemReg, viewReport;
+	private JButton studentReg, professorReg, foodItemReg, viewReport, dishButton;
 	
 	private JPanel panel1, panel2;
 	
@@ -40,6 +40,8 @@ public class MainScreen extends JFrame implements ActionListener{
 		this.professorReg.addActionListener(this);
 		this.viewReport = new JButton("View Financial Report");
 		this.viewReport.addActionListener(this);
+		this.dishButton = new JButton("Dish Registration");
+		this.dishButton.addActionListener(this);
 		
 		// Order Placeholder
 		this.orders = new JLabel("Orders Placeholder");
@@ -65,6 +67,8 @@ public class MainScreen extends JFrame implements ActionListener{
 		this.buttonBox.add(this.studentReg);
 		this.buttonBox.add(Box.createRigidArea(new Dimension(20, 20)));
 		this.buttonBox.add(this.professorReg);
+		this.buttonBox.add(Box.createRigidArea(new Dimension(20, 20)));
+		this.buttonBox.add(this.dishButton);
 		this.buttonBox.add(Box.createRigidArea(new Dimension(20, 20)));
 		this.buttonBox.add(Box.createRigidArea(new Dimension(20, 20)));
 		this.buttonBox.add(this.viewReport);
@@ -116,6 +120,18 @@ public class MainScreen extends JFrame implements ActionListener{
 			dispose();
 		}
 		
+	/*	if(event.getSource() == this.dishButton) {
+			
+			try {
+				new DishBeverageScreen("Dianne Lopez", 0);
+				dispose();
+			} catch (ClassNotFoundException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+	*/
 		
 	}
 	
