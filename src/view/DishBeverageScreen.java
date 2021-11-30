@@ -104,12 +104,19 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 		this.DishDropdown.addItem("(Select Item)");
 		
 		// Grab list of food items from fooditem table
-		ResultSet rs = DataAccess.queryDB("SELECT name FROM fooditem");
+		try {
+			ResultSet rs = DataAccess.queryDB("SELECT name FROM fooditem");
 		
-		while(rs.next()) {
+			while(rs.next()) {
 		
-			this.DishDropdown.addItem(rs.getString(1));
+				this.DishDropdown.addItem(rs.getString(1));
 		
+			}
+		}
+		catch(Exception e) {
+			
+			// Display Error message
+			JOptionPane.showMessageDialog(this, e, "Can't populate dish dropdown", JOptionPane.ERROR_MESSAGE);
 		}
 		
 		// Populate dropdown with items from database
@@ -432,5 +439,8 @@ public class DishBeverageScreen extends JFrame implements ActionListener {
 		}
 		
 	}
+	
 
 }
+
+
