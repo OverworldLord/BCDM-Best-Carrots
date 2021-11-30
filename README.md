@@ -2,10 +2,11 @@
 
 # How to Set up
 1. use eclipse enterprise edition
-2. jdk-17.0.1
-3. postgreSQL 14
-4. import 113021.tar in pgAdmin4
-5. and run BCDM-Best-Carrots in Eclipse as java application
+2. import the whole project folder
+3. jdk-17.0.1
+4. postgreSQL 14
+5. import 113021.tar in pgAdmin4
+6. and run BCDM-Best-Carrots in Eclipse as java application
 
 
 Data format
