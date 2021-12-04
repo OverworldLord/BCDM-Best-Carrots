@@ -9,12 +9,12 @@
 <%@page import="java.util.Date" %>
 <%@page import="java.text.SimpleDateFormat"%> 
 <%
-	// Accessing the database
+	/* Accessing the database
 	String id = request.getParameter("userid");
 	String driver = "org.postgresql.Driver";
 	String connectionUrl = "jdbc:postgresql://localhost:5432/cpp_restaurant";
 	String userid = "postgres";
-	String password = "123456789";
+	String password = "123";
 	try {
 		Class.forName(driver);
 	} catch (ClassNotFoundException e) {
@@ -23,6 +23,7 @@
 	Connection connection = null;
 	Statement statement = null;
 	ResultSet rs = null;
+	*/
 %>
 <!DOCTYPE html>
 <html>
@@ -37,18 +38,20 @@
 			<table>
 				<tbody>
 					<tr>
-					<%
+					<% /*
 					try {
-						connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/cpp_restaurant", "postgres", "123456789");
+						connection = DriverManager.getConnection(driver, userid, password);
 						statement = connection.createStatement();
 						String sql = "SELECT name FROM fooditem";
 						rs = statement.executeQuery(sql);
 						while(rs.next()){
+						*/
 					%>
+					<!-- 
 						<td>Item</td>
 						<td>
 							<select name="item">
-								<option><%=rs.getString("name") %></option>
+								<option><%//=rs.getString("name") %></option>
 							</select>
 						</td>
 						<td>Price</td>
@@ -57,12 +60,14 @@
 						<td><input type="text" name="quantity" value="" size="50" /></td>
 						<td><input type="button" value="Add"></td>
 					</tr>
-					<%
+					-->
+					<% /*
 					}
 					connection.close();
 					} catch (Exception e) {
 					e.printStackTrace();
 					}
+					*/
 					%>
 					<tr>
 						<td>Item</td>
