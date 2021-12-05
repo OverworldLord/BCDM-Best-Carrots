@@ -120,7 +120,7 @@ public class MainScreen extends JFrame implements ActionListener{
 			dispose();
 		}
 		
-	/*	if(event.getSource() == this.dishButton) {
+		if(event.getSource() == this.dishButton) {
 			
 			try {
 				new DishBeverageScreen("Dianne Lopez", 0);
@@ -131,7 +131,7 @@ public class MainScreen extends JFrame implements ActionListener{
 			}
 			
 		}
-	*/
+	
 		
 	}
 	

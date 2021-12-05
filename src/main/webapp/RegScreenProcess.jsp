@@ -22,7 +22,7 @@
 	// Accessing database and adding items to order
 	try	{
 		Class.forName("org.postgresql.Driver");
-		Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/cpp_restaurant", "postgres", "123456789");
+		Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/cpp_restaurant", "postgres", "123");
 		try {
 			ResultSet rs = statement.executeQuery("SELECT MAX(\"itemID\") FROM fooditem");
 			if(rs.next()) {
